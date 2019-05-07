@@ -4,7 +4,6 @@
       <router-view/>
     </transition>
     <foot-guide v-if="$route.meta.isFootGuide"/>
-    1234
   </div>
 </template>
 
