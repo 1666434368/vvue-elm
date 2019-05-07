@@ -4,11 +4,7 @@
       <router-view/>
     </transition>
     <foot-guide v-if="$route.meta.isFootGuide"/>
-<<<<<<< HEAD
     345345345
-=======
-    123123
->>>>>>> fc43cfe0d32b5ada81359c1524c8973c917feb3d
   </div>
 </template>
 
