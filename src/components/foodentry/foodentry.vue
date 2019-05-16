@@ -14,10 +14,6 @@
   </div>
 </template>
 <script>
-<<<<<<< HEAD
-=======
-import $ from 'jquery'
->>>>>>> 795b94dc6888c02b2e604bf57e11328444a7a7ce
 export default {
   data () {
     return {
