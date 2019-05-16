@@ -29,13 +29,13 @@
         </div>
       </div>
     </div>
-    <div class="shop-list">
+    <div class="shop-list" ref="shopList">
       <div class="shop-content">
         <div class="menuview">
           <div class="menuview-main">
-            <div class="menuview-left">
+            <div class="menuview-left" ref="menuviewLeft">
               <ul class="menucategory-category">
-                <li class="menucategory-categoryItem menucategory-active" v-for="(item3, index3) in foods.menu" :key="index3">
+                <li class="menucategory-categoryItem" v-for="(item3, index3) in foods.menu" :key="index3" :class="{'menucategory-active' : currentIndex === index3}" @click="scrollTo(index3)">
                   <img class="menucategory-categoryIcon" v-if="item3.icon_url" :src="imgUrl26(item3.icon_url)">
                   <span class="menucategory-categoryQuantity">1</span>
                   <span class="menucategory-categoryName">{{item3.name}}</span>
@@ -46,7 +46,7 @@
           <!-- <swiper :options="swiperOptionRight" class="swiper-right-box"> -->
             <div class="menuview-right" ref="menuviewRight">
               <div class="scroller">
-                <dl v-for="(item4, index4) in foods.menu" :key="index4">
+                <dl class="content" v-for="(item4, index4) in foods.menu" :key="index4">
                   <dt>
                     <div class="category-title">
                       <strong class="category-name">{{item4.name}}</strong>
@@ -171,37 +171,23 @@ export default {
       required: true
     }
   },
-  created()　{
-    console.log(this.foods)
-    this.request.user_id = this.foods.user.user_id
-    this.request.restaurant_id = this.foods.rst.id
-    this.response.checkout_button_v2.action = "forbidden",
-    this.response.checkout_button_v2.text = '￥' + this.foods.rst.float_minimum_order_amount + '起送'
-  },
-  mounted() {
-    // console.log(this.request)
-    // this.request.user_id = this.foods.user.user_id
-    // this.request.restaurant_id = this.foods.ret.id
-    // console.log(this.request)
-    this.$nextTick(function () {
-      // this.rights = new BScroll(this.$refs.menuviewRight,{
-      this.rights = new BScroll('.menuview-right',{
-          probeType: 3
-      })
-      this.rights.on('scroll', (pos) => {
-        console.log(pos)
-      })
-    })
-  },
+  
   data() {
     return {
+      // 商品右边滚动不同种类的元素高度的集合
+      menuviewRight_height: [],
+      // 商品左边滚动的index
+      currentIndex: 0,
+      // 查看购物车中商品时，背景层的显示变量
       isBgShow: false,
+      // 发送的值
       request: {
         user_id: undefined,
         // 餐厅id
         restaurant_id: undefined,
         entities: []
       },
+      // 返回的值
       response: {
         checkout_button_v2: {
           action: "checkout",
@@ -328,6 +314,32 @@ export default {
       }
     }
   },
+  created()　{
+    console.log(this.foods)
+    this.request.user_id = this.foods.user.user_id
+    this.request.restaurant_id = this.foods.rst.id
+    this.response.checkout_button_v2.action = "forbidden",
+    this.response.checkout_button_v2.text = '￥' + this.foods.rst.float_minimum_order_amount + '起送'
+  },
+  mounted() {
+    // console.log(this.request)
+    // this.request.user_id = this.foods.user.user_id
+    // this.request.restaurant_id = this.foods.ret.id
+    // console.log(this.request)
+    this.$nextTick(function () {
+      // 计算右侧滚动的区域，并存放在数组中
+      this.scroll_right_height();
+      let scrollVal = $("body").height() - $(".shop-list").height() - $(".shoptab").height()
+      this.$refs.menuviewRight.addEventListener('scroll', () =>{
+        // 商品滚动的距离
+        let top = $(this.$refs.menuviewRight).scrollTop()
+        if (top > 0 && $(window).scrollTop() != scrollVal) {
+          $(window).scrollTop(scrollVal)
+        }
+      })
+    })
+    //注意：如果由于自己的vue中的样式导致监听不到，可以尝试监听body或者'#app-root'的滚动事件
+  },
   methods: {
     imgUrl686,
     imgUrl240,
@@ -393,6 +405,22 @@ export default {
     },
     scroll_init(e) {
       console.log(e, $(document).scrollTop())
+    },
+    scroll_right_height () {
+      // 获取右侧每个模块的高度，存放在sp_height数组中
+      let heightList = this.$refs.menuviewRight.querySelectorAll('.content')
+      let height = 0
+      this.menuviewRight_height.push(height)
+      for (let i = 0; i < heightList.length; i++) {
+        height += heightList[i].clientHeight
+        this.menuviewRight_height.push(height)
+      }
+    },
+    scrollTo (index) {
+      // 实现左侧，单击 右侧滚动至相应模块
+      this.currentIndex = index
+      console.log(this.menuviewRight_height)
+      $(this.$refs.menuviewRight).animate({scrollTop: this.menuviewRight_height[index]}, 500);
     }
   }
 }
@@ -510,7 +538,6 @@ export default {
               padding: .466667rem .2rem;
               font-size: .32rem;
               color: #666;
-              background-color: #fff;
               .menucategory-categoryIcon{
                 width: .346667rem;
                 height: .346667rem;

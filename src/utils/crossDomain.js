@@ -6,7 +6,8 @@ import axios from 'axios'
 
 // axios 配置
 axios.defaults.timeout = 10000 // 5000 // request timeout //mod by wg 20190103 改成10秒，后端调用支付宝接口可能在5秒内无法返回结果
-axios.defaults.baseURL = process.env.BASE_API
+axios.defaults.baseURL = '/api'
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 // 用来处理刷新token后重新请求的自定义变量
 axios.defaults.isRetryRequest = false
 
@@ -14,8 +15,7 @@ axios.defaults.isRetryRequest = false
 // var loadinginstace
 axios.interceptors.request.use(
   config => {
-    config.headers['X-Shard'] = 'loc=114.305215,30.592935'
-    // console.log(config)
+    console.log(config)
     return config
   },
   err => {
@@ -26,19 +26,19 @@ axios.interceptors.request.use(
 // http response 拦截器
 axios.interceptors.response.use(
   response => {
-    // console.log('response', response)
+    console.log('response', response)
     // 关闭遮罩层，非常重要，不然页面都不能操作了！
     // loadinginstace.close();
-    // const res = response.data
-    // if (res && res.code !== 200) {
-    //   // eslint-disable-next-line prefer-promise-reject-errors
-    //   return Promise.reject('error')
-    // } else if (res) {
+    const res = response.data
+    if (res && res.code !== 200) {
+      // eslint-disable-next-line prefer-promise-reject-errors
+      return Promise.reject('error')
+    } else if (res) {
       return response
-    // } else {
-    //   // eslint-disable-next-line prefer-promise-reject-errors
-    //   return Promise.reject('error')
-    // }
+    } else {
+      // eslint-disable-next-line prefer-promise-reject-errors
+      return Promise.reject('error')
+    }
   },
   err => {
     console.log(err)
@@ -51,3 +51,7 @@ axios.interceptors.response.use(
 )
 
 export default axios
+
+
+
+// 代理跨域的方式，实际示例在shopList.vue中

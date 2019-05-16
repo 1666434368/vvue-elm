@@ -9,7 +9,7 @@
           <span class="bg">品牌<span class="text">品牌</span></span>
           <img class="img" :src="imgUrl150(topData.image_path)">
         </div>
-        <div class="name">
+        <div class="name" @click="dialogName">
           <h2>
             <span>{{topData.name}}</span>
             <i></i>
@@ -20,7 +20,7 @@
             <span>{{topData.delivery_mode.text}}约{{topData.order_lead_time}}分钟</span>
           </div>
         </div>
-        <div class="Offer">
+        <div class="Offer" @click="dialogOffer">
           <div class="Offer-left">
             <div class="Offer-content">
               <span class="title" style="color: rgb(255, 255, 255);" :style="{ backgroundColor: '#' + topData.activities[0].icon_color }">{{topData.activities[0].icon_name}}</span>
@@ -32,17 +32,78 @@
         <p class="bulletin">公告：{{topData.promotion_info}}</p>
       </div>
     </div>
+    <!-- <c-dialog :visible.sync="briefDialogVisible" v-model="briefDialogVisible" width="30%"></c-dialog> -->
+    <c-dialog :visible.sync="briefDialogVisible" width="30%">
+      <transition name="scale-show">
+        <div v-if="briefDialogVisible" class="content">
+          <h2 class="brief-title">
+            <i class="brief-img">品牌</i>{{topData.name}}
+          </h2>
+          <ul class="brief-param">
+            <li class="brief-info">
+              <h3 class="brief-info-data">{{topData.rating}}</h3>
+              <p class="brief-info-dire">评分</p>
+            </li>
+            <li class="brief-info">
+              <h3 class="brief-info-data">{{topData.recent_order_num}}单</h3>
+              <p class="brief-info-dire">月售</p>
+            </li>
+            <li class="brief-info">
+              <h3 class="brief-info-data">{{topData.delivery_mode.text}}</h3>
+              <p class="brief-info-dire">约{{topData.order_lead_time}}分钟</p>
+            </li>
+            <li class="brief-info">
+              <h3 class="brief-info-data">{{topData.piecewise_agent_fee.extra_fee}}元</h3>
+              <p class="brief-info-dire">配送费</p>
+            </li>
+            <li class="brief-info">
+              <h3 class="brief-info-data">{{topData.distance > 1000 ? (topData.distance / 1000).toFixed(1) : topData.distance}}km</h3>
+              <p class="brief-info-dire">距离</p>
+            </li>
+          </ul>
+          <h3 class="brief-bulletin">
+            <span>公告</span>
+          </h3>
+          <div class="brief-desc">{{topData.promotion_info}}</div>
+        </div>
+      </transition>
+      <div class="close" style="" @click="briefDialogVisible = false"></div>
+    </c-dialog>
+    <c-dialog :visible.sync="discountDialogVisible" width="30%">
+      <transition name="discount-show">
+        <div v-if="discountDialogVisible" class="discount">
+          <h2 class="discount-title">优惠活动</h2>
+          <ul class="discount-content">
+            <li class="discount-info" v-for="(item, index) in topData.activities" :key="index">
+              <h3 class="discount-img" :style="{background: '#' + item.icon_color}">{{item.icon_name}}</h3>
+              <p class="discount-text">{{item.tips}}</p>
+            </li>
+          </ul>
+          <div class="close" style="" @click="discountDialogVisible = false">x</div>
+        </div>
+      </transition>
+    </c-dialog>
   </div>
 </template>
 
 <script>
 import { imgUrl750, imgUrl150 } from '@/utils/imgurl.js'
+import cDialog from '@/components/dialog'
 export default {
   name: 'shopHeader',
+  components: {
+    cDialog
+  },
   props: {
     topData: {
       type: Object,
       required: true
+    }
+  },
+  data() {
+    return {
+      briefDialogVisible: false,
+      discountDialogVisible: false
     }
   },
   created() {
@@ -54,6 +115,13 @@ export default {
     handleReturn() {
       this.$router.back(-1)
       console.log(this.$route)
+    },
+    dialogName() {
+      console.log(123)
+      this.briefDialogVisible = true;
+    },
+    dialogOffer() {
+      this.discountDialogVisible = true;
     }
   }
 }
@@ -265,6 +333,170 @@ export default {
         width: 8rem;
         font-size: .293333rem;
       }
+    }
+  }
+  .content{
+    position: relative;
+    width: 80%;
+    max-height: 8.533333rem;
+    padding: .706667rem .666667rem .746667rem;
+    border-radius: .106667rem;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    .brief-title{
+      font-size: .6rem;
+      line-height: .666667rem;
+      color: #333;
+      text-align: center;
+      font-weight: bolder;
+      .brief-img{
+        position: relative;
+        top: -.053333rem;
+        margin-right: .16rem;
+        border-radius: .026667rem;
+        background-image: linear-gradient(90deg,#fff100,#ffe339);
+        color: #6a3709;
+        font-style: normal;
+        padding: .08rem;
+        font-weight: 700;
+        font-size: .32rem;
+      }
+    }
+    .brief-param{
+      display: flex;
+      margin: .506667rem -.666667rem 0;
+      .brief-info{
+        flex: 1;
+        text-align: center;
+        .brief-info-data{
+          font-size: .4rem;
+          font-weight: 600;
+          color: #333;
+          margin-bottom: .16rem;
+        }
+        .brief-info-dire{
+          font-size: .293333rem;
+          color: #999;
+        }
+      }
+    }
+    .brief-bulletin{
+      position: relative;
+      text-align: center;
+      margin: .48rem auto .266667rem;
+      width: 2.026667rem;
+      background-image: linear-gradient(90deg,#fff,#333 50%,#fff);
+      background-size: 100% 1px;
+      background-position: 50%;
+      background-repeat: no-repeat;
+      font-size: 0;
+      span{
+        font-size: .32rem;
+        padding: 0 .106667rem;
+        color: #999;
+        background-color: #fff;
+      }
+    }
+    .brief-desc{
+      font-size: .346667rem;
+      line-height: 1.54;
+      color: #333;
+      max-height: 2.666667rem;
+      overflow-y: auto;
+    }
+  }
+  .close{
+    margin-top: .8rem;
+    width: .8rem;
+    height: .8rem;
+    background-size: 100%;
+    background-position: 50%;
+    background-repeat: no-repeat;background-image: url('//fuss10.elemecdn.com/8/ba/bcfa8cc62b20e044bd2ea1c1c7f3dpng.png?imageMogr/format/webp/');
+  }
+  .scale-show-enter-active {
+    animation: bounce-in .3s;
+  }
+  .scale-show-leave-active {
+    animation: bounce-in .3s reverse;
+  }
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  .discount{
+    position: absolute;
+    background-color: #f5f5f5;
+    box-shadow: 0 -1px 5px 0 rgba(0,0,0,.4);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: .533333rem .693333rem;
+    box-sizing: border-box;
+    color: #333;
+    .discount-title{
+      text-align: center;
+      font-size: .453333rem;
+      font-weight: 600;
+      margin-bottom: .413333rem;
+    }
+    .discount-content{
+      height: 5.08rem;
+      overflow-y: scroll;
+      .discount-info{
+        margin-bottom: .306667rem;
+        display: flex;
+        font-size: .346667rem;
+        align-items: center;
+        .discount-img{
+          background-color: rgb(112, 188, 70);
+          height: .48rem;
+          padding: .053333rem .16rem;
+          margin-right: .16rem;
+          font-size: .32rem;
+          display: inline-block;
+          box-sizing: border-box;
+          border-radius: .026667rem;
+          color: #fff;
+          white-space: nowrap;
+        }
+        .discount-text{
+          font-size: .346667rem;
+          line-height: 1.38;
+          flex: 1;
+        }
+      }
+    }
+    .close{
+      position: absolute;
+      height: .64rem;
+      width: .64rem;
+      right: .266667rem;
+      top: 0;
+      margin-top: 0;
+      // background-size: 100%;
+      // background-position: 50%;
+      // background-repeat: no-repeat;background-image: url('//fuss10.elemecdn.com/8/ba/bcfa8cc62b20e044bd2ea1c1c7f3dpng.png?imageMogr/format/webp/');
+  
+    }
+  }
+  .discount-show-enter-active {
+    animation: bounce-in-discount .3s;
+  }
+  .discount-show-leave-active {
+    animation: bounce-in-discount .3s reverse;
+  }
+  @keyframes bounce-in-discount {
+    0% {
+      transform: translateY(7.093333rem);
+    }
+    100% {
+      transform: translateY(0);
     }
   }
 }

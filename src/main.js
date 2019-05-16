@@ -16,8 +16,12 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 import VueJsonp from 'vue-jsonp'
 
-import stickyBox from './components/sticky/sticky-box.vue'
+import Axios from 'axios'
+Vue.prototype.$axios = Axios
+Axios.defaults.baseURL = '/api'
+Axios.defaults.headers.post['Content-Type'] = 'application/json';
 
+import stickyBox from './components/sticky/sticky-box.vue'
 Vue.component('sticky-box', stickyBox)
 
 Vue.use(VueJsonp)
