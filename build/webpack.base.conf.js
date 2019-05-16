@@ -9,6 +9,7 @@ function resolve (dir) {
 }
 
 const createLintingRule = () => ({
+<<<<<<< HEAD
   // test: /\.(js|vue)$/,
   // loader: 'eslint-loader',
   // enforce: 'pre',
@@ -23,6 +24,19 @@ module.exports = {
   externals: {
     'AMap': 'window.AMap'
   },
+=======
+  test: /\.(js|vue)$/,
+  loader: 'eslint-loader',
+  enforce: 'pre',
+  include: [resolve('src'), resolve('test')],
+  options: {
+    formatter: require('eslint-friendly-formatter'),
+    emitWarning: !config.dev.showEslintErrorsInOverlay
+  }
+})
+
+module.exports = {
+>>>>>>> 795b94dc6888c02b2e604bf57e11328444a7a7ce
   context: path.resolve(__dirname, '../'),
   entry: {
     app: './src/main.js'
