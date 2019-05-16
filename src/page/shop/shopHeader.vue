@@ -95,6 +95,7 @@ export default {
     cDialog
   },
   props: {
+    // 传递给shopHeader的数据，必须传
     topData: {
       type: Object,
       required: true
@@ -112,6 +113,7 @@ export default {
   methods: {
     imgUrl750,
     imgUrl150,
+    // 界面头部的返回按钮
     handleReturn() {
       this.$router.back(-1)
       console.log(this.$route)

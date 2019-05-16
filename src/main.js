@@ -5,6 +5,8 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+// eslint-disable-next-line no-unused-vars
+import $ from 'jquery'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
 import './config/rem'

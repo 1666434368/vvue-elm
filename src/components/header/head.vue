@@ -4,7 +4,7 @@
       <div class="c-head-1">
         <div class="c-head-2">
           <img class="img1" src="../../img/mark.png" alt="1">
-          <span class="text1">武汉市人民政府</span>
+          <span class="text1">{{headTopData.formattedAddress}}</span>
           <img class="img2" src="../../img/sub.png" alt="2">
         </div>
       </div>
@@ -17,7 +17,16 @@
   </div>
 </template>
 <script>
-export default {}
+export default {
+  name: 'Head',
+  props: {
+    // 从父组件传递过来的数据，主要是定位信息
+    headTopData: {
+      type: Object,
+      required: true
+    }
+  }
+}
 </script>
 <style lang="less" scoped>
   @import '../../style/main';

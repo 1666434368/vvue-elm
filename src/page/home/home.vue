@@ -1,11 +1,12 @@
 <template>
   <div>
-    <headTop/>
+    <headTop :headTopData="headTopData"/>
     <div class="search">
       <div class="content">
         <span>搜索饿了么商家、商品名称</span>
       </div>
     </div>
+    <!-- 分类 -->
     <foodEntry/>
     <div class="banner">
       <swiper :options="swiperOption" class="swiper-box">
@@ -20,17 +21,24 @@
       </swiper>
       <div class="text">资质证照</div>
     </div>
+    <!-- 商家列表 -->
     <shoplist/>
     <!-- <foot-guide/> -->
+    <!-- 定位时展示的弹层 -->
+    <div v-if="isPositionSuccess" class="positionDialog">
+      <img src="@/img/buffer.gif" alt="buffer">
+    </div>
   </div>
 </template>
 
 <script>
+import getLocation from '@/config/map/position'
 import headTop from '../../components/header/head'
 import foodEntry from '../../components/foodentry/foodentry'
 import shoplist from '../../components/shoplist/shoplist'
 // import footGuide from '../../components/footer/footer'
 export default {
+  name: 'home', // 饿了么首页
   components: {
     headTop,
     foodEntry,
@@ -39,6 +47,13 @@ export default {
   },
   data () {
     return {
+      // 判断定位是否完成，用于来界定是否加载商家列表
+      isPositionSuccess: true,
+      // 传递给headTop组件的数据，主要包含的是定位的值
+      headTopData: {
+        formattedAddress: '正在定位...'
+      },
+      // 资质证照的图片列表数据
       banner: [
         [
           {
@@ -55,6 +70,7 @@ export default {
           }
         ]
       ],
+      // 资质证照的图片使用swiper插件进行滚动的参数
       swiperOption: {
         // 滑动方向水平
         direction: 'horizontal',
@@ -71,6 +87,28 @@ export default {
         }
       }
     }
+  },
+  mounted() {
+    let _this = this
+    // 定位的方法处理
+    getLocation(
+      // 调用成功的回调
+      function onComplete (data) {
+          // data是具体的定位信息
+          console.log('data', data)
+          if (data.info.toUpperCase() === 'SUCCESS') {
+            _this.isPositionSuccess = false;
+            _this.headTopData.formattedAddress = data.formattedAddress;
+          }
+      },
+      // 调用失败的回调
+      function onError (data) {
+        // 定位出错
+        console.log('data', data)
+        alert(JSON.stringify(data))
+        _this.headTopData.formattedAddress = '未能获取地址';
+      }
+    )
   }
 }
 </script>
@@ -132,6 +170,21 @@ export default {
     background: #fff;
     color: #999;
     font-size: .373333rem;
+  }
+}
+.positionDialog{
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255);
+  position: fixed;
+  top: 2.426667rem;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img{
+    margin-top: -4.026667rem;
   }
 }
 </style>
