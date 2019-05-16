@@ -12,18 +12,9 @@
       <div class='shoptabItem' :class="isShow === 1 ? 'select' : ''" @click='handleShopTabItem(1)'><span>评价</span></div>
       <div class='shoptabItem' :class="isShow === 2 ? 'select' : ''" @click='handleShopTabItem(2)'><span>商家</span></div>
     </div>
-<<<<<<< HEAD
     <c-goods v-if='isShow === 0' :foods='foods'/>
     <c-ratings v-if='isShow === 1'/>
     <c-seller v-if='isShow === 2' :seller='foods.rst'/>
-=======
-    <!-- 点餐 -->
-    <c-goods v-if="isShow === 0" :foods="foods"/>
-    <!-- 评价 -->
-    <c-ratings v-if="isShow === 1"/>
-    <!-- 商家 -->
-    <c-seller v-if="isShow === 2" :seller="foods.rst"/>
->>>>>>> fdea70c7435298e9ca110db22d250de0d71c20df
   </div>
 </template>
 
