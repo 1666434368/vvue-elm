@@ -1,6 +1,6 @@
-import Vue from 'vue'
-import AMap from 'AMap'
-Vue.use(AMap)
+// import Vue from 'vue'
+// import AMap from 'AMap'
+// Vue.use(AMap)
 
 let getLocation = (onComplete = function () {}, onError = function () {}) => {
   let map = new AMap.Map('aMap', {

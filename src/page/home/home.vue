@@ -33,9 +33,9 @@
 
 <script>
 import getLocation from '@/config/map/position'
-import headTop from '../../components/header/head'
-import foodEntry from '../../components/foodentry/foodentry'
-import shoplist from '../../components/shoplist/shoplist'
+import headTop from '@/components/header/head'
+import foodEntry from '@/components/foodentry/foodentry'
+import shoplist from '@/components/shoplist/shoplist'
 // import footGuide from '../../components/footer/footer'
 export default {
   name: 'home', // 饿了么首页
