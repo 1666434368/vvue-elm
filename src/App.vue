@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="app">
     <transition name="router-fade"> 
       <router-view/>
     </transition>
@@ -35,8 +35,10 @@ export default {
 
 <style>
 #app{
-  background-color: #fff;
-  overflow: hidden;
+  height: auto;
+  min-height: 100%;
+  background-color: #f5f5f5;
+  /* overflow: hidden; */
 }
 .router-fade-enter-active, .router-fade-leave-active {
   transition: opacity .3s;

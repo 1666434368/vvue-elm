@@ -12,6 +12,14 @@ export default new Router({
       redirect: { name: 'home' }
     },
     {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/page/login/login'),
+      meta: {
+        isFootGuide: false
+      }
+    },
+    {
       path: '/home',
       name: 'home',
       component: home,
